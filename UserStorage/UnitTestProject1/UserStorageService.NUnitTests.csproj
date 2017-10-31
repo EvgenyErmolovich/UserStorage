@@ -61,10 +61,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\UserStorageServices.Tests\UserStorageServices.Tests.csproj">
-      <Project>{e439739b-8f5a-4048-b153-f9f75f5820cf}</Project>
-      <Name>UserStorageServices.Tests</Name>
-    </ProjectReference>
     <ProjectReference Include="..\UserStorageServices\UserStorageServices.csproj">
       <Project>{3c5e56f6-e2f8-4e49-a68c-707934f04350}</Project>
       <Name>UserStorageServices</Name>

@@ -14,6 +14,7 @@ namespace UserStorageServices
         public UserStorageService()
         {
             users = new List<User>();
+            IsLoggingEnabled = true;
         }
 
         public UserStorageService(IEnumerable<User> users) : this()
@@ -49,6 +50,8 @@ namespace UserStorageServices
             }
         }
 
+        public bool IsLoggingEnabled { get; }
+
         /// <summary>
         /// Adds a new <see cref="User"/> to the storage.
         /// </summary>
@@ -64,6 +67,11 @@ namespace UserStorageServices
                 || user.Age <= 10 || user.Age >= 100)
             {
                 throw new ArgumentException("Firstname is null or empty or whitespace", nameof(user));
+            }
+
+            if (IsLoggingEnabled)
+            {
+                Console.WriteLine("Add() method is called");
             }
 
             // TODO: Implement Add() method and all other validation rules.
@@ -92,6 +100,11 @@ namespace UserStorageServices
                 throw new ArgumentException("No user with such Id was found");
             }
 
+            if (IsLoggingEnabled)
+            {
+                Console.WriteLine("Remove() method is called");
+            }
+
             users.Remove(user);
         }
 
@@ -104,6 +117,11 @@ namespace UserStorageServices
             if (predicate == null)
             {
                 throw new ArgumentNullException("Argument {nameof(predicate)} is null");
+            }
+
+            if (IsLoggingEnabled)
+            {
+                Console.WriteLine("Search() method is called");
             }
 
             return users.FindAll(predicate);
