@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace UserStorageServices
 {
@@ -7,11 +8,19 @@ namespace UserStorageServices
     /// </summary>
     public class UserStorageService
     {
+        private List<User> users;
+
         /// <summary>
         /// Gets the number of elements contained in the storage.
         /// </summary>
         /// <returns>An amount of users in the storage.</returns>
-        public int Count { get; }
+        public int Count
+        {
+            get
+            {
+                return users.Count;
+            }
+        }
 
         /// <summary>
         /// Adds a new <see cref="User"/> to the storage.
