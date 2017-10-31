@@ -31,7 +31,7 @@ namespace UserStorageApp
 
             _userStorageService.Remove(null);
 
-            _userStorageService.Search();
+            _userStorageService.Search(null);
         }
     }
 }

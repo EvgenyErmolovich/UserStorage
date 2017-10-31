@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace UserStorageServices
 {
@@ -97,9 +98,45 @@ namespace UserStorageServices
         /// <summary>
         /// Searches through the storage for a <see cref="User"/> that matches specified criteria.
         /// </summary>
-        public void Search()
+        public IEnumerable<User> Search(Predicate<User> predicate)
         {
             // TODO: Implement Search() method.
+            if (predicate == null)
+            {
+                throw new ArgumentNullException("Argument {nameof(predicate)} is null");
+            }
+
+            return users.FindAll(predicate);
+        }
+
+        public User GetFirstUserByName(string firstName)
+        {
+            return Search(delegate(User user) { return user.FirstName == firstName; }).FirstOrDefault();
+        }
+
+        public IEnumerable<User> GetAllUsersByName(string firstname)
+        {
+            return Search(delegate(User user) { return user.FirstName == firstname; });
+        }
+
+        public User GetFirstUserByLastName(string lastname)
+        {
+            return Search(delegate(User user) { return user.LastName == lastname; }).FirstOrDefault();
+        }
+
+        public IEnumerable<User> GetAllUsersByLastName(string lastname)
+        {
+            return Search(delegate(User user) { return user.LastName == lastname; });
+        }
+
+        public User GetFirstUserByAge(int age)
+        {
+            return Search(delegate(User user) { return user.Age == age; }).FirstOrDefault();
+        }
+
+        public IEnumerable<User> GetAllUsersByAge(int age)
+        {
+            return Search(delegate(User user) { return user.Age == age; });
         }
 
         private bool Contains(User user)
