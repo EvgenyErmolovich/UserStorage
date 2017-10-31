@@ -10,6 +10,32 @@ namespace UserStorageServices
     {
         private List<User> users;
 
+        public UserStorageService()
+        {
+            users = new List<User>();
+        }
+
+        public UserStorageService(IEnumerable<User> users) : this()
+        {
+            foreach (User u in users)
+            {
+                Add(u);
+            }
+        }
+
+        public UserStorageService(User user) : this()
+        {
+            Add(user);
+        }
+
+        public UserStorageService(params User[] users) : this()
+        {
+            foreach (User u in users)
+            {
+                Add(u);
+            }
+        }
+
         /// <summary>
         /// Gets the number of elements contained in the storage.
         /// </summary>
@@ -40,14 +66,32 @@ namespace UserStorageServices
             }
 
             // TODO: Implement Add() method and all other validation rules.
+            users.Add(user);
         }
 
         /// <summary>
         /// Removes an existed <see cref="User"/> from the storage.
         /// </summary>
-        public void Remove()
+        public void Remove(User user)
         {
             // TODO: Implement Remove() method.
+            if (user == null)
+            {
+                throw new ArgumentNullException("User entity {nameof(user)} is null");
+            }
+
+            if (user.Id == Guid.Empty || string.IsNullOrWhiteSpace(user.FirstName) ||
+            string.IsNullOrWhiteSpace(user.LastName))
+            {
+                throw new ArgumentException("User {nameof(user)} is not defined");
+            }
+
+            if (!Contains(user))
+            {
+                throw new ArgumentException("No user with such Id was found");
+            }
+
+            users.Remove(user);
         }
 
         /// <summary>
@@ -56,6 +100,19 @@ namespace UserStorageServices
         public void Search()
         {
             // TODO: Implement Search() method.
+        }
+
+        private bool Contains(User user)
+        {
+            foreach (User u in users)
+            {
+                if (u.Id == user.Id)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

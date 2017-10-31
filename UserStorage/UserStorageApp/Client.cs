@@ -29,7 +29,7 @@ namespace UserStorageApp
                 Age = 25
             });
 
-            _userStorageService.Remove();
+            _userStorageService.Remove(null);
 
             _userStorageService.Search();
         }
