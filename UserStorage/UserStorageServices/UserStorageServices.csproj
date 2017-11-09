@@ -46,9 +46,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DefaultEntityValidator.cs" />
+    <Compile Include="DefaultIdGenerator.cs" />
     <Compile Include="User.cs" />
     <Compile Include="UserStorageService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\UserStorageInterfaces\UserStorageInterfaces.csproj">
+      <Project>{290cd2f4-b188-4d91-910e-302f91e29228}</Project>
+      <Name>UserStorageInterfaces</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -62,6 +62,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\UserStorageInterfaces\UserStorageInterfaces.csproj">
+      <Project>{290cd2f4-b188-4d91-910e-302f91e29228}</Project>
+      <Name>UserStorageInterfaces</Name>
+    </ProjectReference>
     <ProjectReference Include="..\UserStorageServices\UserStorageServices.csproj">
       <Project>{3c5e56f6-e2f8-4e49-a68c-707934f04350}</Project>
       <Name>UserStorageServices</Name>

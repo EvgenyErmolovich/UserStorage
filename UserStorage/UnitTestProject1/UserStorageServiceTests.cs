@@ -19,7 +19,7 @@ namespace UserStorageServices.NUnitTests
             User user3 = new User() { FirstName = "Sue", LastName = "gen", Age = 42 };
             User user4 = new User() { FirstName = "Alex", LastName = "Black", Age = 111 };
 
-            UserStorageService service = new UserStorageService(user1, user2, user3, user4);
+            UserStorageService service = new UserStorageService(null, null, user1, user2, user3, user4);
 
             Assert.AreEqual(user1, service.GetFirstUserByName(name));
             Assert.AreNotEqual(user4, service.GetFirstUserByName(name));
@@ -33,7 +33,7 @@ namespace UserStorageServices.NUnitTests
             User user3 = new User() { FirstName = "Sue", LastName = "gen", Age = 42 };
             User user4 = new User() { FirstName = "Alex", LastName = "Black", Age = 111 };
 
-            UserStorageService service = new UserStorageService(user1, user2, user3, user4);
+            UserStorageService service = new UserStorageService(null, null, user1, user2, user3, user4);
 
             Assert.AreEqual(null, service.GetFirstUserByName(name));
         }
@@ -53,7 +53,7 @@ namespace UserStorageServices.NUnitTests
             User user3 = new User() { FirstName = "Sue", LastName = "gen", Age = 42 };
             User user4 = new User() { FirstName = "Alex", LastName = "Black", Age = 111 };
 
-            UserStorageService service = new UserStorageService(user1, user2, user3, user4);
+            UserStorageService service = new UserStorageService(null, null, user1, user2, user3, user4);
 
             Assert.AreEqual(new[] { user1, user4 }, service.GetAllUsersByName(name));
             Assert.AreNotEqual(user4, service.GetFirstUserByName(name));

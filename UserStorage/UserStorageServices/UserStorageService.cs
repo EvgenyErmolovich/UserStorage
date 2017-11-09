@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using UserStorageInterfaces;
 
 namespace UserStorageServices
 {
@@ -10,14 +11,20 @@ namespace UserStorageServices
     public class UserStorageService
     {
         private List<User> users;
+        private readonly IIdGenerator generator;
+        private readonly IEntityValidator<User> validator;
 
-        public UserStorageService()
+        public UserStorageService(IEntityValidator<User> _validator = null, IIdGenerator _generator = null)
         {
+            validator = _validator;
+            generator = _generator;
+            if (_validator == null) validator = new DefaultEntityValidator();
+            if (generator == null) generator = new DefaultIdGenerator();
             users = new List<User>();
             IsLoggingEnabled = true;
         }
 
-        public UserStorageService(IEnumerable<User> users) : this()
+        public UserStorageService(IEnumerable<User> users, IEntityValidator<User> _validator = null, IIdGenerator _generator = null) : this(_validator, _generator)
         {
             foreach (User u in users)
             {
@@ -25,12 +32,12 @@ namespace UserStorageServices
             }
         }
 
-        public UserStorageService(User user) : this()
+        public UserStorageService(User user, IEntityValidator<User> _validator = null, IIdGenerator _generator = null) : this(_validator, _generator)
         {
             Add(user);
         }
 
-        public UserStorageService(params User[] users) : this()
+        public UserStorageService(IEntityValidator<User> _validator = null, IIdGenerator _generator = null, params User[] users) : this(_validator, _generator)
         {
             foreach (User u in users)
             {
@@ -58,23 +65,17 @@ namespace UserStorageServices
         /// <param name="user">A new <see cref="User"/> that will be added to the storage.</param>
         public void Add(User user)
         {
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
-
-            if (string.IsNullOrWhiteSpace(user.FirstName) || string.IsNullOrWhiteSpace(user.LastName) 
-                || user.Age <= 10 || user.Age >= 100)
-            {
-                throw new ArgumentException("Firstname is null or empty or whitespace", nameof(user));
-            }
-
             if (IsLoggingEnabled)
             {
                 Console.WriteLine("Add() method is called");
             }
 
             // TODO: Implement Add() method and all other validation rules.
+            validator.Validate(user);
+            if (user.Id == Guid.Empty)
+            {
+                user.Id = generator.Generate();
+            }
             users.Add(user);
         }
 
