@@ -2,26 +2,26 @@
 using System.Collections.Generic;
 using System.Linq;
 using UserStorageInterfaces;
+using System.Diagnostics;
 
 namespace UserStorageServices
 {
     /// <summary>
     /// Represents a service that stores a set of <see cref="User"/>s and allows to search through them.
     /// </summary>
-    public class UserStorageService: IUserStorageService
+    public class UserStorageService: Switch, IUserStorageService
     {
         private List<User> users;
         private readonly IIdGenerator generator;
         private readonly IEntityValidator<User> validator;
 
-        public UserStorageService(IEntityValidator<User> _validator = null, IIdGenerator _generator = null)
+        public UserStorageService(IEntityValidator<User> _validator = null, IIdGenerator _generator = null) : base("enableLogging", "If logging enabled")
         {
             validator = _validator;
             generator = _generator;
             if (_validator == null) validator = new DefaultEntityValidator();
             if (generator == null) generator = new DefaultIdGenerator();
             users = new List<User>();
-            IsLoggingEnabled = true;
         }
 
         public UserStorageService(IEnumerable<User> users, IEntityValidator<User> _validator = null, IIdGenerator _generator = null) : this(_validator, _generator)
@@ -57,7 +57,7 @@ namespace UserStorageServices
             }
         }
 
-        public bool IsLoggingEnabled { get; }
+        private static BooleanSwitch boolSwitch = new BooleanSwitch("enabledLogging", "Check if logging is on or off");
 
         /// <summary>
         /// Adds a new <see cref="User"/> to the storage.
@@ -65,7 +65,7 @@ namespace UserStorageServices
         /// <param name="user">A new <see cref="User"/> that will be added to the storage.</param>
         public void Add(User user)
         {
-            if (IsLoggingEnabled)
+            if (boolSwitch.Enabled)
             {
                 Console.WriteLine("Add() method is called");
             }
@@ -101,7 +101,7 @@ namespace UserStorageServices
                 throw new ArgumentException("No user with such Id was found");
             }
 
-            if (IsLoggingEnabled)
+            if (boolSwitch.Enabled)
             {
                 Console.WriteLine("Remove() method is called");
             }
@@ -120,7 +120,7 @@ namespace UserStorageServices
                 throw new ArgumentNullException("Argument {nameof(predicate)} is null");
             }
 
-            if (IsLoggingEnabled)
+            if (boolSwitch.Enabled)
             {
                 Console.WriteLine("Search() method is called");
             }

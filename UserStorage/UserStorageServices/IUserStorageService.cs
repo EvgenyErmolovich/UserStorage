@@ -8,7 +8,6 @@ namespace UserStorageServices
 {
     public interface IUserStorageService
     {
-        bool isLoggingEnabled { get; }
         int Count { get; }
         void Add(User user);
         void Remove(User user);
