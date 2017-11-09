@@ -15,7 +15,10 @@ namespace UserStorageApp
         public Client(IUserStorageService userStorageService = null)
         {
             _userStorageService = userStorageService;
-            if (userStorageService != null) _userStorageService = userStorageService;
+            if (userStorageService != null)
+            {
+                _userStorageService = userStorageService;
+            }
         }
 
         /// <summary>

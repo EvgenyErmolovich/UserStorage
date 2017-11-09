@@ -17,6 +17,7 @@ namespace UserStorageServices
             {
                 throw new ArgumentException("FirstName is null or empty or whitespace", nameof(user));
             }
+
             return true;
         }
     }
