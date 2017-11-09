@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="DefaultEntityValidator.cs" />
     <Compile Include="DefaultIdGenerator.cs" />
+    <Compile Include="IUserStorageService.cs" />
     <Compile Include="User.cs" />
     <Compile Include="UserStorageService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
