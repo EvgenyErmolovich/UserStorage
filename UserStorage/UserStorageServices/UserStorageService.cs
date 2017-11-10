@@ -22,7 +22,7 @@ namespace UserStorageServices
             this.generator = _generator;
             if (_validator == null)
             {
-                this.validator = new DefaultEntityValidator();
+                this.validator = new CompositeValidator();
             }
 
             if (this.generator == null)
