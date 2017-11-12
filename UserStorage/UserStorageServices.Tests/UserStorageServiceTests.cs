@@ -64,8 +64,9 @@ namespace UserStorageServices.Tests
             // Arrange
             var userStorageService = new UserStorageService();
 
+            var s = new UserStorageLog(userStorageService);
             // Act
-            userStorageService.Add(new User
+            s.Add(new User
             {
                 FirstName = "Evgeny",
                 LastName = "Ermolovich",
