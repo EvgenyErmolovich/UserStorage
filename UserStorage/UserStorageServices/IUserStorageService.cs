@@ -15,17 +15,5 @@ namespace UserStorageServices
         void Remove(User user);
 
         IEnumerable<User> Search(Predicate<User> predicate);
-
-        User GetFirstUserByName(string firstName);
-
-        IEnumerable<User> GetAllUsersByName(string firstname);
-
-        User GetFirstUserByLastName(string lastname);
-
-        IEnumerable<User> GetAllUsersByLastName(string lastname);
-
-        User GetFirstUserByAge(int age);
-
-        IEnumerable<User> GetAllUsersByAge(int age);
     }
 }

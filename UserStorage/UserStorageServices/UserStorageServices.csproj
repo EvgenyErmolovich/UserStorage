@@ -46,10 +46,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DefaultEntityValidator.cs" />
+    <Compile Include="AgeException.cs" />
+    <Compile Include="AgeValidator.cs" />
+    <Compile Include="CompositeValidator.cs" />
     <Compile Include="DefaultIdGenerator.cs" />
+    <Compile Include="FirstNameIsNullOrEmptyException.cs" />
+    <Compile Include="FirstNameValidator.cs" />
     <Compile Include="IUserStorageService.cs" />
+    <Compile Include="LastNameIsNullOrEmptyException.cs" />
+    <Compile Include="LastNameValidator.cs" />
     <Compile Include="User.cs" />
+    <Compile Include="UserStorageDecorator.cs" />
+    <Compile Include="UserStorageLog.cs" />
     <Compile Include="UserStorageService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

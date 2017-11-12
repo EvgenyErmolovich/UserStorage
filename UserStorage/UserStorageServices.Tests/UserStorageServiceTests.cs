@@ -20,7 +20,7 @@ namespace UserStorageServices.Tests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
+        [ExpectedException(typeof(FirstNameIsNullOrEmptyException))]
         public void Add_UserFirstNameIsNull_ExceptionThrown()
         {
             // Arrange
@@ -41,7 +41,7 @@ namespace UserStorageServices.Tests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
+        [ExpectedException(typeof(LastNameIsNullOrEmptyException))]
         public void Add_UserLastNameIsNull_ExceptionThrown()
         {
             // Arrange
@@ -58,14 +58,16 @@ namespace UserStorageServices.Tests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
+        [ExpectedException(typeof(AgeException))]
         public void Add_UserAgeLessThen10_ExceptionThrown()
         {
             // Arrange
             var userStorageService = new UserStorageService();
 
+            var s = new UserStorageLog(userStorageService);
+
             // Act
-            userStorageService.Add(new User
+            s.Add(new User
             {
                 FirstName = "Evgeny",
                 LastName = "Ermolovich",
@@ -76,7 +78,7 @@ namespace UserStorageServices.Tests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
+        [ExpectedException(typeof(AgeException))]
         public void Add_UserAgeGreaterThen100_ExceptionThrown()
         {
             // Arrange

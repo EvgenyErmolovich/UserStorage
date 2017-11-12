@@ -16,8 +16,7 @@ namespace UserStorageApp
 
             using (var host = new ServiceHost(MyDiagnostics.Create(serviceConfiguration)))
             {
-                host.SmartOpen();
-
+                // host.SmartOpen();
                 var client = new Client();
 
                 client.Run();
@@ -26,7 +25,7 @@ namespace UserStorageApp
                 Console.WriteLine("Press <Enter> to stop the service.");
                 Console.ReadLine();
 
-                host.Close();
+                // host.Close();
             }
         }
     }
