@@ -65,6 +65,7 @@ namespace UserStorageServices.Tests
             var userStorageService = new UserStorageService();
 
             var s = new UserStorageLog(userStorageService);
+
             // Act
             s.Add(new User
             {

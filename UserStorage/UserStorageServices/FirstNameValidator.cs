@@ -7,7 +7,7 @@ using UserStorageInterfaces;
 
 namespace UserStorageServices
 {
-    class FirstNameValidator : IEntityValidator<User>
+    public class FirstNameValidator : IEntityValidator<User>
     {
         public void Validate(User user)
         {

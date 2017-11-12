@@ -58,6 +58,7 @@ namespace UserStorageServices.NUnitTests
             Assert.AreEqual(new[] { user1, user4 }, service.GetAllUsersByName(name));
             Assert.AreNotEqual(user4, service.GetFirstUserByName(name));
         }
+
         [TestCase("Alex", "Black")]
         public void GetFirstUserByFirstAndLastName_FirstNameAlexLastNameBlack_FirstUserWithFirstNameAlexLastNameBlack(
 string first, string last)
@@ -140,9 +141,6 @@ string first, string last)
             User user2 = new User() { FirstName = "Mike", LastName = "red", Age = 123 };
             User user3 = new User() { FirstName = "Sue", LastName = "Black", Age = 42 };
             User user4 = new User() { FirstName = "Alex", LastName = "Black", Age = 22 };
-
-
-
 
             UserStorageService service = new UserStorageService(null, null, user1, user2, user3, user4);
 

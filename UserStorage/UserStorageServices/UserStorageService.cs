@@ -168,44 +168,42 @@ namespace UserStorageServices
 
         public User GetFirstUserByFirstAndLastName(string firstname, string lastname)
         {
-            return Search(user => user.FirstName == firstname && user.LastName == lastname).FirstOrDefault();
+            return this.Search(user => user.FirstName == firstname && user.LastName == lastname).FirstOrDefault();
         }
 
         public IEnumerable<User> GetAllUsersByFirstAndLastName(string firstname, string lastname)
         {
-            return Search(user => user.FirstName == firstname && user.LastName == lastname);
-
+            return this.Search(user => user.FirstName == firstname && user.LastName == lastname);
         }
 
         public User GetFirstUserByFirstNameAndAge(string firstname, int age)
         {
-            return Search(user => user.FirstName == firstname && user.Age == age).FirstOrDefault();
+            return this.Search(user => user.FirstName == firstname && user.Age == age).FirstOrDefault();
         }
 
         public IEnumerable<User> GetAllUsersByFirstNameAndAge(string firstname, int age)
         {
-            return Search(user => user.FirstName == firstname && user.Age == age);
+            return this.Search(user => user.FirstName == firstname && user.Age == age);
         }
 
         public User GetFirstUserByLastNameAndAge(string lastname, int age)
         {
-            return Search(user => user.LastName == lastname && user.Age == age).FirstOrDefault();
+            return this.Search(user => user.LastName == lastname && user.Age == age).FirstOrDefault();
         }
 
         public IEnumerable<User> GetAllUsersByLastNameAndAge(string lastname, int age)
         {
-            return Search(user => user.LastName == lastname && user.Age == age);
+            return this.Search(user => user.LastName == lastname && user.Age == age);
         }
 
         public User GetFirstUserByFirstAndLastNameAndAge(string firstname, string lastname, int age)
         {
-            return Search(user => user.FirstName == firstname && user.LastName == lastname && user.Age == age).FirstOrDefault();
+            return this.Search(user => user.FirstName == firstname && user.LastName == lastname && user.Age == age).FirstOrDefault();
         }
 
         public IEnumerable<User> GetAllUsersByFirstAndLastNameAndAge(string firstname, string lastname, int age)
         {
-            return Search(user => user.FirstName == firstname && user.LastName == lastname && user.Age == age);
-
+            return this.Search(user => user.FirstName == firstname && user.LastName == lastname && user.Age == age);
         }
 
         private bool Contains(User user)

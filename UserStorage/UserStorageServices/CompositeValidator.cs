@@ -7,9 +7,10 @@ using UserStorageInterfaces;
 
 namespace UserStorageServices
 {
-    class CompositeValidator : IEntityValidator<User>
+    public class CompositeValidator : IEntityValidator<User>
     {
         private readonly List<IEntityValidator<User>> validators;
+
         public CompositeValidator()
         {
             validators = new List<IEntityValidator<User>>();
@@ -17,14 +18,18 @@ namespace UserStorageServices
             validators.Add(new LastNameValidator());
             validators.Add(new AgeValidator());
         }
+
         public void Validate(User user)
         {
-            if (user == null) throw new ArgumentNullException($"{nameof(user)} is null");
+            if (user == null)
+            {
+                throw new ArgumentNullException($"{nameof(user)} is null");
+            }
+
             foreach (var i in validators)
             {
                 i.Validate(user);
             }
         }
-
     }
 }

@@ -14,9 +14,13 @@ namespace UserStorageServices
         {
             Service = _service;
         }
+
         public abstract int Count { get; }
+
         public abstract void Add(User user);
+
         public abstract void Remove(User user);
+
         public abstract IEnumerable<User> Search(Predicate<User> predicate);
     }
 }
