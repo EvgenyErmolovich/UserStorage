@@ -1,4 +1,5 @@
-﻿using UserStorageServices;
+﻿using System.Collections.Generic;
+using UserStorageServices;
 
 namespace UserStorageApp
 {
@@ -17,7 +18,7 @@ namespace UserStorageApp
             _userStorageService = userStorageService;
             if (_userStorageService == null)
             {
-                _userStorageService = new UserStorageLog(new UserStorageServices.UserStorageService());
+                _userStorageService = new UserStorageLog(new UserStorageServiceMaster(null));
             }
         }
 
@@ -33,9 +34,17 @@ namespace UserStorageApp
                 Age = 25
             });
 
-            // _userStorageService.Remove(null);
+            UserStorageServiceMaster m = new UserStorageServiceMaster(new List<UserStorageServiceSlave>(new[] { new UserStorageServiceSlave(), new UserStorageServiceSlave(), }));
 
-            // _userStorageService.Search(null);
+            m.Add(new User()
+            {
+                FirstName = "a",
+                LastName = "b",
+                Age = 55
+            });
+            ///_userStorageService.Remove(null);
+
+            ///_userStorageService.Search(null);
         }
     }
 }
