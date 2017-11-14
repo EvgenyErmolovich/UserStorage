@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using UserStorageInterfaces;
 
 namespace UserStorageServices
@@ -14,7 +15,18 @@ namespace UserStorageServices
         private static BooleanSwitch boolSwitch = new BooleanSwitch("enabledLogging", "Check if logging is on or off");
         private readonly IIdGenerator generator;
         private readonly IEntityValidator<User> validator;
+        private readonly UserStorageServiceMode mode;
+        private List<IUserStorageService> slaveServices;
         private List<User> users;
+
+        public UserStorageService(UserStorageServiceMode _mode, IEnumerable<IUserStorageService> _slaves = null) : this()
+        {
+            this.mode = _mode;
+            if (mode == UserStorageServiceMode.MasterNode && _slaves != null)
+            {
+                this.slaveServices = _slaves.ToList();
+            }
+        }
 
         public UserStorageService(IEntityValidator<User> _validator = null, IIdGenerator _generator = null) : base("enableLogging", "If logging enabled")
         {
@@ -72,9 +84,9 @@ namespace UserStorageServices
         /// <param name="user">A new <see cref="User"/> that will be added to the storage.</param>
         public void Add(User user)
         {
-            if (boolSwitch.Enabled)
+            if (!OperationAllowed())
             {
-                Console.WriteLine("Add() method is called");
+                throw new NotSupportedException();
             }
 
             // TODO: Implement Add() method and all other validation rules.
@@ -84,7 +96,17 @@ namespace UserStorageServices
                 user.Id = this.generator.Generate();
             }
 
-            this.users.Add(user);
+            if (mode == UserStorageServiceMode.MasterNode)
+            {
+                foreach (var service in slaveServices)
+                {
+                    service.Add(user);
+                }
+            }
+            else
+            {
+                this.users.Add(user);
+            }
         }
 
         /// <summary>
@@ -109,12 +131,22 @@ namespace UserStorageServices
                 throw new ArgumentException("No user with such Id was found");
             }
 
-            if (boolSwitch.Enabled)
+            if (!OperationAllowed())
             {
-                Console.WriteLine("Remove() method is called");
+                throw new NotSupportedException();
             }
 
-            this.users.Remove(user);
+            if (mode == UserStorageServiceMode.MasterNode)
+            {
+                foreach (var service in slaveServices)
+                {
+                    service.Remove(user);
+                }
+            }
+            else
+            {
+                this.users.Remove(user);
+            }
         }
 
         /// <summary>
@@ -128,12 +160,23 @@ namespace UserStorageServices
                 throw new ArgumentNullException("Argument {nameof(predicate)} is null");
             }
 
-            if (boolSwitch.Enabled)
+            if (mode == UserStorageServiceMode.SlaveNode)
             {
-                Console.WriteLine("Search() method is called");
+                return this.users.FindAll(predicate);
             }
+            else
+            {
+                List<User> result = new List<User>();
+                foreach (var service in slaveServices)
+                {
+                    if (service.Search(predicate) != null)
+                    {
+                        result.AddRange(service.Search(predicate));
+                    }
+                }
 
-            return this.users.FindAll(predicate);
+                return result;
+            }
         }
 
         public User GetFirstUserByName(string firstName)
@@ -218,5 +261,33 @@ namespace UserStorageServices
 
             return false;
         }
+
+        private bool OperationAllowed()
+        {
+            StackTrace stack = new StackTrace();
+            var currentMethod = stack.GetFrame(1).GetMethod();
+            var stackFramesContainsCurrentMethod = stack.GetFrames();
+            var counterOfSameFrames = 0;
+            foreach (var frame in stackFramesContainsCurrentMethod)
+            {
+                if (frame.GetMethod() == currentMethod)
+                {
+                    counterOfSameFrames++;
+                }
+                if (counterOfSameFrames >= 2)
+                {
+                    break;
+                }
+            }
+
+            return mode == UserStorageServiceMode.MasterNode || counterOfSameFrames >= 2;
+        }
+    }
+
+    public enum UserStorageServiceMode
+    {
+        MasterNode,
+        SlaveNode
     }
 }
+

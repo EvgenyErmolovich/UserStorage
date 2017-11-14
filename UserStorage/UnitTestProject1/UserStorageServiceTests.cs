@@ -175,5 +175,28 @@ string first, string last)
 
             Assert.AreEqual(new[] { user1, user4 }, service.GetAllUsersByFirstAndLastNameAndAge(first, last, age));
         }
+
+        [TestCase()]
+        public void MasterMethodAdd_AnyUser_UserAddedToSlaveNodes()
+        {
+            User user = new User() { FirstName = "Alex", LastName = "Black", Age = 22 };
+            UserStorageService slaveService1 = new UserStorageService(UserStorageServiceMode.SlaveNode);
+            UserStorageService slaveService2 = new UserStorageService(UserStorageServiceMode.SlaveNode);
+            UserStorageService masterService = new UserStorageService(UserStorageServiceMode.MasterNode, new List<IUserStorageService>(new[] { slaveService1, slaveService2 }));
+
+            masterService.Add(user);
+
+            Assert.AreEqual(1, slaveService1.Count);
+            Assert.AreEqual(1, slaveService2.Count);
+        }
+
+        [Test]
+        public void SlaveMethodAdd_AnyUser_NotSupportedException()
+        {
+            User user = new User() { FirstName = "Alex", LastName = "Black", Age = 22 };
+            UserStorageService slaveService1 = new UserStorageService(UserStorageServiceMode.SlaveNode);
+
+            Assert.Catch<NotSupportedException>(() => slaveService1.Add(user));
+        }
     }
 }
