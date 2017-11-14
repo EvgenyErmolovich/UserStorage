@@ -10,21 +10,27 @@ namespace UserStorageServices
     /// <summary>
     /// Represents a service that stores a set of <see cref="User"/>s and allows to search through them.
     /// </summary>
-    public class UserStorageService : Switch, IUserStorageService
+    public class UserStorageService : Switch, IUserStorageService, INotificationSubscriber
     {
-        private static BooleanSwitch boolSwitch = new BooleanSwitch("enabledLogging", "Check if logging is on or off");
+        private readonly UserStorageServiceMode mode;
         private readonly IIdGenerator generator;
         private readonly IEntityValidator<User> validator;
-        private readonly UserStorageServiceMode mode;
-        private List<IUserStorageService> slaveServices;
+        private List<IUserStorageService> slaveServices = new List<IUserStorageService>();
         private List<User> users;
+        private List<INotificationSubscriber> subscribers = new List<INotificationSubscriber>();
 
         public UserStorageService(UserStorageServiceMode _mode, IEnumerable<IUserStorageService> _slaves = null) : this()
         {
             this.mode = _mode;
             if (mode == UserStorageServiceMode.MasterNode && _slaves != null)
             {
+                subscribers = new List<INotificationSubscriber>();
+                slaveServices = new List<IUserStorageService>();
                 this.slaveServices = _slaves.ToList();
+                foreach (var sub in _slaves)
+                {
+                    subscribers.Add((INotificationSubscriber)sub);
+                }
             }
         }
 
@@ -96,7 +102,7 @@ namespace UserStorageServices
                 user.Id = this.generator.Generate();
             }
 
-            if (mode == UserStorageServiceMode.MasterNode)
+            if (mode == UserStorageServiceMode.MasterNode && slaveServices != null)
             {
                 foreach (var service in slaveServices)
                 {
@@ -107,6 +113,39 @@ namespace UserStorageServices
             {
                 this.users.Add(user);
             }
+            if (mode == UserStorageServiceMode.MasterNode)
+            {
+                foreach (var sub in subscribers)
+                {
+                    sub.UserAdded(user);
+                }
+            }
+        }
+
+        public void UserAdded(User user)
+        {
+            Trace.Write("For Subscriber : User added");
+        }
+
+        public void UserRemoved(User user)
+        {
+
+            Trace.Write("For Subscriber : User removed");
+        }
+
+        public void AddSubscriber(INotificationSubscriber sub)
+        {
+            if (mode == UserStorageServiceMode.SlaveNode) return;
+            if (sub == null) throw new ArgumentNullException($"{nameof(sub)} is null");
+            subscribers.Add(sub);
+        }
+
+        public void RemoveSubscriber(INotificationSubscriber sub)
+        {
+            if (mode == UserStorageServiceMode.SlaveNode) return;
+            if (sub == null) throw new ArgumentNullException($"{nameof(sub)} is null");
+            if (!subscribers.Contains(sub)) throw new InvalidOperationException("No such subscruber was found");
+            subscribers.Remove(sub);
         }
 
         /// <summary>
@@ -126,11 +165,6 @@ namespace UserStorageServices
                 throw new ArgumentException("User {nameof(user)} is not defined");
             }
 
-            if (!this.Contains(user))
-            {
-                throw new ArgumentException("No user with such Id was found");
-            }
-
             if (!OperationAllowed())
             {
                 throw new NotSupportedException();
@@ -143,9 +177,22 @@ namespace UserStorageServices
                     service.Remove(user);
                 }
             }
+
             else
             {
+                if (!this.Contains(user))
+                {
+                    throw new ArgumentException("No user with such Id was found");
+                }
                 this.users.Remove(user);
+            }
+
+            if (mode == UserStorageServiceMode.MasterNode)
+            {
+                foreach (var sub in subscribers)
+                {
+                    sub.UserRemoved(user);
+                }
             }
         }
 

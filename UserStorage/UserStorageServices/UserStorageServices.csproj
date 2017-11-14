@@ -52,6 +52,7 @@
     <Compile Include="DefaultIdGenerator.cs" />
     <Compile Include="FirstNameIsNullOrEmptyException.cs" />
     <Compile Include="FirstNameValidator.cs" />
+    <Compile Include="INotificationSubscriber.cs" />
     <Compile Include="IUserStorageService.cs" />
     <Compile Include="LastNameIsNullOrEmptyException.cs" />
     <Compile Include="LastNameValidator.cs" />
