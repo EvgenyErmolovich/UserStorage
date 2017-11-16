@@ -36,6 +36,8 @@ namespace UserStorageApp
 
             UserStorageServiceMaster m = new UserStorageServiceMaster(new List<UserStorageServiceSlave>(new[] { new UserStorageServiceSlave(), new UserStorageServiceSlave(), }));
 
+            m.AddSubscriber(new UserStorageServiceSlave());
+
             m.Add(new User()
             {
                 FirstName = "a",

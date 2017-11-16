@@ -10,10 +10,15 @@ namespace UserStorageServices
     public class UserStorageServiceMaster : UserStorageService
     {
         private List<UserStorageServiceSlave> slaveServices;
+
         private List<INotificationSubscriber> subscribers = new List<INotificationSubscriber>();
 
+        private event Action<User> UserAdded;
+
+        private event Action<User> UserRemoved;
+
         public UserStorageServiceMaster(IEnumerable<UserStorageServiceSlave> slaves, IEntityValidator<User> validator = null, IIdGenerator generator = null)
-        : base(validator, generator)
+            : base(validator, generator)
         {
             if (slaves != null)
             {
@@ -24,7 +29,6 @@ namespace UserStorageServices
                 this.slaveServices = new List<UserStorageServiceSlave>();
             }
         }
-
         public override UserStorageServiceMode ServiceMode => UserStorageServiceMode.MasterNode;
         public override void Add(User user)
         {
@@ -34,10 +38,12 @@ namespace UserStorageServices
                 ss.Add(user);
             }
 
-            foreach (var sub in subscribers)
-            {
-                sub.UserAdded(user);
-            }
+            OnUserAdded(user);
+
+            //foreach (var sub in subscribers)
+            //{
+            // sub.UserAdded(user);   
+            //}
         }
 
         public override void Remove(User user)
@@ -48,10 +54,12 @@ namespace UserStorageServices
                 ss.Remove(user);
             }
 
-            foreach (var sub in subscribers)
-            {
-                sub.UserRemoved(user);
-            }
+            OnUserRemoved(user);
+
+            //foreach (var sub in subscribers)
+            //{
+            //    sub.UserRemoved(user);
+            //}
         }
 
         public override IEnumerable<User> Search(Predicate<User> predicate)
@@ -62,6 +70,7 @@ namespace UserStorageServices
             }
 
             List<User> result = new List<User>();
+
             foreach (var service in slaveServices)
             {
                 if (service.Search(predicate) != null)
@@ -76,6 +85,8 @@ namespace UserStorageServices
         {
             if (sub == null) throw new ArgumentNullException($"{nameof(sub)} is null");
             subscribers.Add(sub);
+            UserAdded += sub.UserAdded;
+            UserRemoved += sub.UserRemoved;
         }
 
         public void RemoveSubscriber(INotificationSubscriber sub)
@@ -83,6 +94,18 @@ namespace UserStorageServices
             if (sub == null) throw new ArgumentNullException($"{nameof(sub)} is null");
             if (!subscribers.Contains(sub)) throw new InvalidOperationException("No such subscruber was found");
             subscribers.Remove(sub);
+            UserAdded -= sub.UserAdded;
+            UserRemoved -= sub.UserRemoved;
+        }
+
+        private void OnUserAdded(User user)
+        {
+            var x = UserAdded;
+            UserAdded?.Invoke(user);
+        }
+        private void OnUserRemoved(User user)
+        {
+            UserRemoved?.Invoke(user);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿#define TRACE
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -8,7 +9,7 @@ using UserStorageInterfaces;
 
 namespace UserStorageServices
 {
-    public class UserStorageServiceSlave : UserStorageService
+    public class UserStorageServiceSlave : UserStorageService, INotificationSubscriber
     {
         public UserStorageServiceSlave(IEntityValidator<User> validator = null, IIdGenerator generator = null)
         : base(validator, generator)
@@ -40,6 +41,16 @@ namespace UserStorageServices
             {
                 throw new NotSupportedException("You don't have enough access lavel");
             }
+        }
+
+        public void UserAdded(User user)
+        { 
+            Trace.WriteLine("For Subscriber : User added"); 
+        } 
+
+        public void UserRemoved(User user)
+        {  
+            Trace.WriteLine("For Subscriber : User removed");
         }
 
         private static bool OperationAllowed()

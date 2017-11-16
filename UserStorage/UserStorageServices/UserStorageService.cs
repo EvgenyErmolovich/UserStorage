@@ -10,7 +10,7 @@ namespace UserStorageServices
     /// <summary>
     /// Represents a service that stores a set of <see cref="User"/>s and allows to search through them.
     /// </summary>
-    public abstract class UserStorageService : Switch, IUserStorageService, INotificationSubscriber
+    public abstract class UserStorageService : Switch, IUserStorageService
     {
         private readonly IIdGenerator generator;
         private readonly IEntityValidator<User> validator;
@@ -101,16 +101,6 @@ namespace UserStorageServices
             //        sub.UserAdded(user);
             //    }
             //}
-        }
-
-        public void UserAdded(User user)
-        {
-            Trace.Write("For Subscriber : User added");
-        }
-
-        public void UserRemoved(User user)
-        {
-            Trace.Write("For Subscriber : User removed");
         }
 
         /// <summary>
