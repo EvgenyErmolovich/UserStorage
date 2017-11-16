@@ -15,6 +15,8 @@ namespace UserStorageServices
             Service = _service;
         }
 
+        public UserStorageServiceMode ServiceMode { get; }
+
         public abstract int Count { get; }
 
         public abstract void Add(User user);

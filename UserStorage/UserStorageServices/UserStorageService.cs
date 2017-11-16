@@ -2,21 +2,29 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using UserStorageInterfaces;
 
 namespace UserStorageServices
 {
+    public enum UserStorageServiceMode
+    {
+        MasterNode,
+        SlaveNode
+    }
+
     /// <summary>
     /// Represents a service that stores a set of <see cref="User"/>s and allows to search through them.
     /// </summary>
-    public class UserStorageService : Switch, IUserStorageService
+    public abstract class UserStorageService : Switch, IUserStorageService
     {
-        private static BooleanSwitch boolSwitch = new BooleanSwitch("enabledLogging", "Check if logging is on or off");
         private readonly IIdGenerator generator;
         private readonly IEntityValidator<User> validator;
-        private List<User> users;
 
-        public UserStorageService(IEntityValidator<User> _validator = null, IIdGenerator _generator = null) : base("enableLogging", "If logging enabled")
+        // private List<IUserStorageService> slaveServices = new List<IUserStorageService>();
+        private List<User> users;
+       
+        protected UserStorageService(IEntityValidator<User> _validator = null, IIdGenerator _generator = null) : base("enableLogging", "If logging enabled")
         {
             this.validator = _validator;
             this.generator = _generator;
@@ -33,7 +41,7 @@ namespace UserStorageServices
             this.users = new List<User>();
         }
 
-        public UserStorageService(IEnumerable<User> users, IEntityValidator<User> _validator = null, IIdGenerator _generator = null) : this(_validator, _generator)
+        protected UserStorageService(IEnumerable<User> users, IEntityValidator<User> _validator = null, IIdGenerator _generator = null) : this(_validator, _generator)
         {
             foreach (User u in users)
             {
@@ -41,12 +49,12 @@ namespace UserStorageServices
             }
         }
 
-        public UserStorageService(User user, IEntityValidator<User> _validator = null, IIdGenerator _generator = null) : this(_validator, _generator)
+        protected UserStorageService(User user, IEntityValidator<User> _validator = null, IIdGenerator _generator = null) : this(_validator, _generator)
         {
             this.Add(user);
         }
 
-        public UserStorageService(IEntityValidator<User> _validator = null, IIdGenerator _generator = null, params User[] users) : this(_validator, _generator)
+        protected UserStorageService(IEntityValidator<User> _validator = null, IIdGenerator _generator = null, params User[] users) : this(_validator, _generator)
         {
             foreach (User u in users)
             {
@@ -66,17 +74,14 @@ namespace UserStorageServices
             }
         }
 
+        public abstract UserStorageServiceMode ServiceMode { get; }
+
         /// <summary>
         /// Adds a new <see cref="User"/> to the storage.
         /// </summary>
         /// <param name="user">A new <see cref="User"/> that will be added to the storage.</param>
-        public void Add(User user)
+        public virtual void Add(User user)
         {
-            if (boolSwitch.Enabled)
-            {
-                Console.WriteLine("Add() method is called");
-            }
-
             // TODO: Implement Add() method and all other validation rules.
             this.validator.Validate(user);
             if (user.Id == Guid.Empty)
@@ -85,12 +90,31 @@ namespace UserStorageServices
             }
 
             this.users.Add(user);
+
+            // if (mode == UserStorageServiceMode.MasterNode && slaveServices != null)
+            // {
+            //    foreach (var service in slaveServices)
+            //    {
+            //        service.Add(user);
+            //    }
+            // }
+            // else
+            // {
+            //    this.users.Add(user);
+            // }
+            // if (mode == UserStorageServiceMode.MasterNode)
+            // {
+            //    foreach (var sub in subscribers)
+            //    {
+            //        sub.UserAdded(user);
+            //    }
+            // }
         }
 
         /// <summary>
         /// Removes an existed <see cref="User"/> from the storage.
         /// </summary>
-        public void Remove(User user)
+        public virtual void Remove(User user)
         {
             // TODO: Implement Remove() method.
             if (user == null)
@@ -109,28 +133,26 @@ namespace UserStorageServices
                 throw new ArgumentException("No user with such Id was found");
             }
 
-            if (boolSwitch.Enabled)
-            {
-                Console.WriteLine("Remove() method is called");
-            }
-
             this.users.Remove(user);
+
+            // if (mode == UserStorageServiceMode.MasterNode)
+            // {
+            //    foreach (var sub in subscribers)
+            //    {
+            //        sub.UserRemoved(user);
+            //    }
+            // }
         }
 
         /// <summary>
         /// Searches through the storage for a <see cref="User"/> that matches specified criteria.
         /// </summary>
-        public IEnumerable<User> Search(Predicate<User> predicate)
+        public virtual IEnumerable<User> Search(Predicate<User> predicate)
         {
             // TODO: Implement Search() method.
             if (predicate == null)
             {
                 throw new ArgumentNullException("Argument {nameof(predicate)} is null");
-            }
-
-            if (boolSwitch.Enabled)
-            {
-                Console.WriteLine("Search() method is called");
             }
 
             return this.users.FindAll(predicate);
@@ -206,17 +228,6 @@ namespace UserStorageServices
             return this.Search(user => user.FirstName == firstname && user.LastName == lastname && user.Age == age);
         }
 
-        private bool Contains(User user)
-        {
-            foreach (User u in this.users)
-            {
-                if (u.Id == user.Id)
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
+        private bool Contains(User user) => this.users.Any(u => u.Id == user.Id);
     }
 }
