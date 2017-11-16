@@ -10,7 +10,7 @@ namespace UserStorageServices.NUnitTests
     [TestFixture]
     public class UserStorageServiceTests
     {
-        //[TestCase("Alex")] 
+        // [TestCase("Alex")] 
         public void GetFirstUserByName_FirstNameAlex_FirstUserWithNameAlex(string name)
         {
             User user1 = new User() { FirstName = "Alex", LastName = "Blck", Age = 22 };
@@ -18,7 +18,7 @@ namespace UserStorageServices.NUnitTests
             User user3 = new User() { FirstName = "Sue", LastName = "gen", Age = 42 };
             User user4 = new User() { FirstName = "Alex", LastName = "Black", Age = 111 };
 
-            //UserStorageService service = new UserStorageService(null, null, user1, user2, user3, user4);
+            // UserStorageService service = new UserStorageService(null, null, user1, user2, user3, user4);
             UserStorageServiceMaster master = new UserStorageServiceMaster(new List<UserStorageServiceSlave>(new[] { new UserStorageServiceSlave(), new UserStorageServiceSlave() }));
             master.Add(user1);
             master.Add(user2);
@@ -60,7 +60,7 @@ namespace UserStorageServices.NUnitTests
             User user3 = new User() { FirstName = "Sue", LastName = "gen", Age = 42 };
             User user4 = new User() { FirstName = "Alex", LastName = "Black", Age = 111 };
 
-            //UserStorageService service = new UserStorageService(null, null, user1, user2, user3, user4);
+            // UserStorageService service = new UserStorageService(null, null, user1, user2, user3, user4);
             UserStorageServiceMaster master = new UserStorageServiceMaster(new List<UserStorageServiceSlave>(new[] { new UserStorageServiceSlave(), new UserStorageServiceSlave() }));
             master.Add(user1);
             master.Add(user2);
@@ -100,7 +100,7 @@ namespace UserStorageServices.NUnitTests
 
             user4 = new User() { FirstName = "Alex", LastName = "Black", Age = 111 };
 
-            //UserStorageService service = new UserStorageService(null, null, user1, user2, user3, user4);
+            // UserStorageService service = new UserStorageService(null, null, user1, user2, user3, user4);
             UserStorageServiceMaster master = new UserStorageServiceMaster(new List<UserStorageServiceSlave>(new[] { new UserStorageServiceSlave(), new UserStorageServiceSlave() }));
             master.Add(user1);
             master.Add(user2);
@@ -110,7 +110,7 @@ namespace UserStorageServices.NUnitTests
             Assert.AreEqual(new[] { user1, user4 }, master.GetAllUsersByFirstAndLastName(first, last).Take(2));
         }
 
-        //[TestCase("Alex", 22)]
+        // [TestCase("Alex", 22)]
         public void GetFirstUserByFirstNameAndAge_FirstNameAlexLastNameBlack_FirstUserWithFirstNameAlexLastNameBlack(string first, int age)
         {
             User user1 = new User() { FirstName = "Alex", LastName = "Black", Age = 22 };
@@ -134,7 +134,7 @@ namespace UserStorageServices.NUnitTests
             User user4 = new User() { FirstName = "Alex", LastName = "Black", Age = 22 };
             User user5 = new User() { FirstName = "Alex", LastName = "Bra", Age = 32 };
 
-            //UserStorageService service = new UserStorageService(null, null, user1, user2, user3, user4, user5);
+            // UserStorageService service = new UserStorageService(null, null, user1, user2, user3, user4, user5);
             UserStorageServiceMaster master = new UserStorageServiceMaster(new List<UserStorageServiceSlave>(new[] { new UserStorageServiceSlave(), new UserStorageServiceSlave() }));
             master.Add(user1);
             master.Add(user2);
@@ -145,7 +145,7 @@ namespace UserStorageServices.NUnitTests
             Assert.AreEqual(new[] { user1, user4 }, master.GetAllUsersByFirstNameAndAge(first, age).Take(2));
         }
 
-        //[TestCase("Black", 22)]
+        // [TestCase("Black", 22)]
         public void GetFirstUserByLastNameAndAge_FirstNameAlexLastNameBlack_FirstUserWithFirstNameAlexLastNameBlack(
         string first, int age)
         {
@@ -154,7 +154,7 @@ namespace UserStorageServices.NUnitTests
             User user3 = new User() { FirstName = "Sue", LastName = "Black", Age = 42 };
             User user4 = new User() { FirstName = "Alex", LastName = "Black", Age = 22 };
 
-            //UserStorageService service = new UserStorageService(null, null, user1, user2, user3, user4);
+            // UserStorageService service = new UserStorageService(null, null, user1, user2, user3, user4);
             UserStorageServiceMaster master = new UserStorageServiceMaster(new List<UserStorageServiceSlave>(new[] { new UserStorageServiceSlave(), new UserStorageServiceSlave() }));
             master.Add(user1);
             master.Add(user2);
@@ -162,6 +162,7 @@ namespace UserStorageServices.NUnitTests
             master.Add(user4);
 
             Assert.AreEqual(user1, master.GetFirstUserByLastNameAndAge(first, age));
+   
             // Assert.AreNotEqual(user4, master.GetFirstUserByLastNameAndAge(first, age));
         }
 
@@ -174,19 +175,16 @@ namespace UserStorageServices.NUnitTests
             User user3 = new User() { FirstName = "Sue", LastName = "Black", Age = 42 };
             User user4 = new User() { FirstName = "Alex", LastName = "Black", Age = 22 };
 
-            //UserStorageService service = new UserStorageService(null, null, user1, user2, user3, user4);
+            // UserStorageService service = new UserStorageService(null, null, user1, user2, user3, user4);
             UserStorageServiceMaster master = new UserStorageServiceMaster(new List<UserStorageServiceSlave>(new[] { new UserStorageServiceSlave(), new UserStorageServiceSlave() }));
             master.Add(user1);
             master.Add(user2);
             master.Add(user3);
             master.Add(user4);
-
-
-
             Assert.AreEqual(new[] { user1, user4 }, master.GetAllUsersByLastNameAndAge(first, age).Take(2));
         }
 
-        //[TestCase("Alex", "Black", 22)]
+        // [TestCase("Alex", "Black", 22)]
         public void GetFirstUserByFirstAndLastNameAndAge_FirstNameAlexLastNameBlack_FirstUserWithFirstNameAlexLastNameBlack(
         string first, string lastname, int age)
         {
@@ -210,7 +208,7 @@ namespace UserStorageServices.NUnitTests
             User user3 = new User() { FirstName = "Sue", LastName = "gen", Age = 42 };
             User user4 = new User() { FirstName = "Alex", LastName = "Black", Age = 22 };
 
-            //UserStorageService service = new UserStorageService(null, null, user1, user2, user3, user4);
+            // UserStorageService service = new UserStorageService(null, null, user1, user2, user3, user4);
             UserStorageServiceMaster master = new UserStorageServiceMaster(new List<UserStorageServiceSlave>(new[] { new UserStorageServiceSlave(), new UserStorageServiceSlave() }));
             master.Add(user1);
             master.Add(user2);
@@ -220,7 +218,7 @@ namespace UserStorageServices.NUnitTests
             Assert.AreEqual(new[] { user1, user4 }, master.GetAllUsersByFirstAndLastNameAndAge(first, last, age).Take(2));
         }
 
-        [TestCase()]
+        [TestCase]
         public void MasterMethodAdd_AnyUser_UserAddedToSlaveNodes()
         {
             User user = new User() { FirstName = "Alex", LastName = "Black", Age = 22 };

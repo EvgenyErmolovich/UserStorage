@@ -14,7 +14,6 @@ namespace UserStorageServices
         public UserStorageServiceSlave(IEntityValidator<User> validator = null, IIdGenerator generator = null)
         : base(validator, generator)
         {
-
         }
 
         public override UserStorageServiceMode ServiceMode => UserStorageServiceMode.SlaveNode;
@@ -66,10 +65,11 @@ namespace UserStorageServices
                     counterOfSameFrames++;
                     break;
                 }
-                //if (counterOfSameFrames >= 2)
-                //{
-                // break;
-                //}
+
+                // if (counterOfSameFrames >= 2)
+                // {
+                //  break;
+                // }
             }
 
             return counterOfSameFrames == 1;

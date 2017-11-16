@@ -7,6 +7,12 @@ using UserStorageInterfaces;
 
 namespace UserStorageServices
 {
+    public enum UserStorageServiceMode
+    {
+        MasterNode,
+        SlaveNode
+    }
+
     /// <summary>
     /// Represents a service that stores a set of <see cref="User"/>s and allows to search through them.
     /// </summary>
@@ -14,7 +20,8 @@ namespace UserStorageServices
     {
         private readonly IIdGenerator generator;
         private readonly IEntityValidator<User> validator;
-        //private List<IUserStorageService> slaveServices = new List<IUserStorageService>();
+
+        // private List<IUserStorageService> slaveServices = new List<IUserStorageService>();
         private List<User> users;
        
         protected UserStorageService(IEntityValidator<User> _validator = null, IIdGenerator _generator = null) : base("enableLogging", "If logging enabled")
@@ -81,26 +88,27 @@ namespace UserStorageServices
             {
                 user.Id = this.generator.Generate();
             }
+
             this.users.Add(user);
 
-            //if (mode == UserStorageServiceMode.MasterNode && slaveServices != null)
-            //{
+            // if (mode == UserStorageServiceMode.MasterNode && slaveServices != null)
+            // {
             //    foreach (var service in slaveServices)
             //    {
             //        service.Add(user);
             //    }
-            //}
-            //else
-            //{
+            // }
+            // else
+            // {
             //    this.users.Add(user);
-            //}
-            //if (mode == UserStorageServiceMode.MasterNode)
-            //{
+            // }
+            // if (mode == UserStorageServiceMode.MasterNode)
+            // {
             //    foreach (var sub in subscribers)
             //    {
             //        sub.UserAdded(user);
             //    }
-            //}
+            // }
         }
 
         /// <summary>
@@ -127,13 +135,13 @@ namespace UserStorageServices
 
             this.users.Remove(user);
 
-            //if (mode == UserStorageServiceMode.MasterNode)
-            //{
+            // if (mode == UserStorageServiceMode.MasterNode)
+            // {
             //    foreach (var sub in subscribers)
             //    {
             //        sub.UserRemoved(user);
             //    }
-            //}
+            // }
         }
 
         /// <summary>
@@ -146,6 +154,7 @@ namespace UserStorageServices
             {
                 throw new ArgumentNullException("Argument {nameof(predicate)} is null");
             }
+
             return this.users.FindAll(predicate);
         }
 
@@ -221,11 +230,4 @@ namespace UserStorageServices
 
         private bool Contains(User user) => this.users.Any(u => u.Id == user.Id);
     }
-
-    public enum UserStorageServiceMode
-    {
-        MasterNode,
-        SlaveNode
-    }
 }
-
