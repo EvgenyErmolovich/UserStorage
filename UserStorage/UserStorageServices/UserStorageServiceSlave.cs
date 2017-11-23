@@ -14,9 +14,6 @@ namespace UserStorageServices
         public UserStorageServiceSlave(IUserRepository rep) : base(rep)
         {
         }
-        //public UserStorageServiceSlave(IUserEntityValidator<User> validator = null, IUserIdGenerator generator = null) : base(validator, generator)
-        //{ 
-        //}
 
         public override UserStorageServiceMode ServiceMode => UserStorageServiceMode.SlaveNode;
 

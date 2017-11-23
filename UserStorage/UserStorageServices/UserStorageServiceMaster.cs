@@ -15,8 +15,8 @@ namespace UserStorageServices
         public UserStorageServiceMaster(IUserRepository rep) : base(rep)
         {
         }
+
         public UserStorageServiceMaster(IUserRepository rep, IEnumerable<UserStorageServiceSlave> slaves, IEntityValidator<User> validator = null, IIdGenerator generator = null) : this(rep)
-        //: base(validator, generator)
         {
             if (slaves != null)
             {
@@ -83,8 +83,8 @@ namespace UserStorageServices
             }
 
             this.subscribers.Add(sub);
-            UserAdded += sub.UserAdded;
-            UserRemoved += sub.UserRemoved;
+            this.UserAdded += sub.UserAdded;
+            this.UserRemoved += sub.UserRemoved;
         }
 
         public void RemoveSubscriber(INotificationSubscriber sub)
@@ -100,19 +100,19 @@ namespace UserStorageServices
             }
 
             this.subscribers.Remove(sub);
-            UserAdded -= sub.UserAdded;
-            UserRemoved -= sub.UserRemoved;
+            this.UserAdded -= sub.UserAdded;
+            this.UserRemoved -= sub.UserRemoved;
         }
 
         private void OnUserAdded(User user)
         {
-            var x = UserAdded;
-            UserAdded?.Invoke(user);
+            var x = this.UserAdded;
+            this.UserAdded?.Invoke(user);
         }
 
         private void OnUserRemoved(User user)
         {
-            UserRemoved?.Invoke(user);
+            this.UserRemoved?.Invoke(user);
         }
     }
 }

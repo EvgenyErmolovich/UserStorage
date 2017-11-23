@@ -24,12 +24,12 @@ namespace UserStorageServices
 
         public override void Start()
         {
-            this.users = this.serializator.DeserializeUsers(filePath);
+            this.users = this.serializator.DeserializeUsers(this.filePath);
         }
 
         public override void Stop()
         {
-            serializator.SerializeUsers(users, filePath);
+            this.serializator.SerializeUsers(this.users, this.filePath);
         }
     }
 }

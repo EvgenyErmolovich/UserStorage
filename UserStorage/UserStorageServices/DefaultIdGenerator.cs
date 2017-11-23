@@ -14,6 +14,12 @@ namespace UserStorageServices
     public class DefaultIdGenerator : IIdGenerator
     {
         private string filePathToSaveAmount = "AmountOfGeneratedId.bin";
+
+        public DefaultIdGenerator()
+        {
+            AmountOfGeneratedId = LoadAmountOfId();
+        }
+
         public int AmountOfGeneratedId { get; private set; }
 
         public Guid Generate()
@@ -21,11 +27,6 @@ namespace UserStorageServices
             ++AmountOfGeneratedId;
             SaveAmountofId();
             return new Guid();
-        }
-
-        public DefaultIdGenerator()
-        {
-            AmountOfGeneratedId = LoadAmountOfId();
         }
 
         private void SaveAmountofId()
@@ -53,6 +54,7 @@ namespace UserStorageServices
                 Trace.WriteLine("Can't find file to load amount of generated id. Amount is set to 0");
                 return 0;
             }
+
             FileStream str = new FileStream(filePathToSaveAmount, FileMode.Open);
             BinaryFormatter formatter = new BinaryFormatter();
             try

@@ -40,6 +40,7 @@ namespace UserStorageServices
                 Trace.WriteLine("Warning : file not found. It will be created");
                 return new List<User>();
             }
+
             FileStream stream = new FileStream(path, FileMode.Open);
             try
             {
@@ -58,5 +59,3 @@ namespace UserStorageServices
         }
     }
 }
-
-

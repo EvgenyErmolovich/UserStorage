@@ -11,7 +11,7 @@ using NUnit.Framework;
 namespace UserStorageServices.NUnitTests
 {
     [TestFixture]
-    class StateTests
+    public class StateTests
     {
         [Test]
         public void UserMemoryCacheWithStatedotStartBinarySerializer_noParametr_SerializationUsersToBinaryFileSucceed()
@@ -62,6 +62,5 @@ namespace UserStorageServices.NUnitTests
                 Assert.AreEqual(listOfDeserialisedUsers.ElementAt(i).Id, listOfUsers.ElementAt(i).Id);
             }
         }
-
     }
 }

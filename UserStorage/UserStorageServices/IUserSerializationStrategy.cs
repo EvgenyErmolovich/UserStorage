@@ -9,6 +9,7 @@ namespace UserStorageServices
     public interface IUserSerializationStrategy
     {
         void SerializeUsers(List<User> users, string path);
+
         List<User> DeserializeUsers(string path);
     }
 }

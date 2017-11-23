@@ -18,28 +18,7 @@ namespace UserStorageServices
     /// </summary>
     public abstract class UserStorageService : IUserStorageService
     {
-        // private readonly IIdGenerator generator;
-        // private readonly IEntityValidator<User> validator;
-
-        // private List<IUserStorageService> slaveServices = new List<IUserStorageService>();
-        // private List<User> users;
-
-        // protected UserStorageService(IEntityValidator<User> _validator = null, IIdGenerator _generator = null) : base("enableLogging", "If logging enabled")
-        // {
-        //    this.validator = _validator;
-        //    this.generator = _generator;
-        //    if (_validator == null)
-        //    {
-        //        this.validator = new CompositeValidator();
-        //    }
-
-        //    if (this.generator == null)
-        //    {
-        //        this.generator = new DefaultIdGenerator();
-        //    }
-
-        //    this.users = new List<User>();
-        // }
+        private readonly IUserRepository repository;
 
         protected UserStorageService(IUserRepository rep)
         {
@@ -47,7 +26,8 @@ namespace UserStorageServices
             {
                 repository = rep;
             }   
-            else throw new ArgumentNullException($"{nameof(rep)} is null");
+
+            throw new ArgumentNullException($"{nameof(rep)} is null");
         }
 
         protected UserStorageService(IEnumerable<User> users, IEntityValidator<User> _validator = null, IIdGenerator _generator = null) : this(_validator, _generator)
@@ -82,8 +62,6 @@ namespace UserStorageServices
                 return repository.Count;
             }
         }
-
-        private readonly IUserRepository repository;
 
         public abstract UserStorageServiceMode ServiceMode { get; }
 
@@ -242,6 +220,6 @@ namespace UserStorageServices
             return this.Search(user => user.FirstName == firstname && user.LastName == lastname && user.Age == age);
         }
 
-        //private bool Contains(User user) => this.users.Any(u => u.Id == user.Id);
+        // private bool Contains(User user) => this.users.Any(u => u.Id == user.Id);
     }
 }

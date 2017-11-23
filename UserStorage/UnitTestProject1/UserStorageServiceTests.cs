@@ -93,12 +93,8 @@ namespace UserStorageServices.NUnitTests
         {
             User user1 = new User() { FirstName = "Alex", LastName = "Black", Age = 22 };
             User user2 = new User() { FirstName = "Mike", LastName = "red", Age = 123 };
-            User
-
-
-            user3 = new User() { FirstName = "Sue", LastName = "gen", Age = 42 };
+            User user3 = new User() { FirstName = "Sue", LastName = "gen", Age = 42 };
             User user4 = new User() { FirstName = "Alex", LastName = "Black", Age = 111 };
-
             UserStorageServiceMaster master = new UserStorageServiceMaster(new UserRepositoryWithState(), new List<UserStorageServiceSlave>(new[] { new UserStorageServiceSlave(new UserRepositoryWithState()), new UserStorageServiceSlave(new UserRepositoryWithState()) }));
             master.Add(user1);
             master.Add(user2);
@@ -172,14 +168,9 @@ namespace UserStorageServices.NUnitTests
 
             UserStorageServiceMaster master = new UserStorageServiceMaster(new UserRepositoryWithState(), new List<UserStorageServiceSlave>(new[] { new UserStorageServiceSlave(new UserRepositoryWithState()), new UserStorageServiceSlave(new UserRepositoryWithState()) }));
             master.Add(user1);
-
-
-
-
             master.Add(user2);
             master.Add(user3);
             master.Add(user4);
-
             Assert.AreEqual(new[] { user1, user4 }, master.GetAllUsersByLastNameAndAge(first, age).Take(2));
         }
 
