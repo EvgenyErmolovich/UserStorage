@@ -18,7 +18,7 @@ namespace UserStorageApp
             _userStorageService = userStorageService;
             if (_userStorageService == null)
             {
-                _userStorageService = new UserStorageLog(new UserStorageServiceMaster(null));
+                _userStorageService = new UserStorageLog(new UserStorageServiceMaster(new UserMemoryCacheWithState()));
             }
         }
 
@@ -27,6 +27,9 @@ namespace UserStorageApp
         /// </summary>
         public void Run()
         {
+            UserMemoryCacheWithState repository = new UserMemoryCacheWithState();
+            repository.Start();
+
             _userStorageService.Add(new User
             {
                 FirstName = "Alex",
@@ -34,9 +37,9 @@ namespace UserStorageApp
                 Age = 25
             });
 
-            UserStorageServiceMaster m = new UserStorageServiceMaster(new UserMemoryCacheWithState(), new List<UserStorageServiceSlave>(new[] { new UserStorageServiceSlave(new UserMemoryCacheWithState()), new UserStorageServiceSlave(new UserMemoryCacheWithState()), }));
+            UserStorageServiceMaster m = new UserStorageServiceMaster(repository, new List<UserStorageServiceSlave>(new[] { new UserStorageServiceSlave(new UserMemoryCacheWithState()), new UserStorageServiceSlave(new UserMemoryCacheWithState()), }));
 
-            m.AddSubscriber(new UserStorageServiceSlave(new UserMemoryCacheWithState()));
+            m.AddSubscriber(new UserStorageServiceSlave(repository));
 
             m.Add(new User()
             {
@@ -44,6 +47,9 @@ namespace UserStorageApp
                 LastName = "b",
                 Age = 55
             });
+
+            repository.Stop();
+
             ///_userStorageService.Remove(null);
 
             ///_userStorageService.Search(null);

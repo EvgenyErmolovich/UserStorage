@@ -1,8 +1,11 @@
-﻿namespace UserStorageServices
+﻿using System;
+
+namespace UserStorageServices
 {
     /// <summary>
     /// Represents a user.
     /// </summary>
+    [Serializable]
     public class User
     {
         /// <summary>
