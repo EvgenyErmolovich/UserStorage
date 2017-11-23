@@ -11,8 +11,7 @@ namespace UserStorageServices
 {
     public class UserStorageServiceSlave : UserStorageService, INotificationSubscriber
     {
-        public UserStorageServiceSlave(IEntityValidator<User> validator = null, IIdGenerator generator = null)
-        : base(validator, generator)
+        public UserStorageServiceSlave(IUserRepository rep) : base(rep)
         {
         }
 
@@ -43,12 +42,12 @@ namespace UserStorageServices
         }
 
         public void UserAdded(User user)
-        { 
-            Trace.WriteLine("For Subscriber : User added"); 
-        } 
+        {
+            Trace.WriteLine("For Subscriber : User added");
+        }
 
         public void UserRemoved(User user)
-        {  
+        {
             Trace.WriteLine("For Subscriber : User removed");
         }
 
@@ -56,20 +55,16 @@ namespace UserStorageServices
         {
             StackTrace stack = new StackTrace();
             var currentMethod = stack.GetFrame(1).GetMethod();
+            var masterMethod = typeof(UserStorageServiceMaster).GetMethod(currentMethod.Name);
             var stackFramesContainsCurrentMethod = stack.GetFrames();
             var counterOfSameFrames = 0;
             foreach (var frame in stackFramesContainsCurrentMethod)
             {
-                if (frame.GetMethod() == currentMethod)
+                if (frame.GetMethod() == masterMethod)
                 {
                     counterOfSameFrames++;
                     break;
                 }
-
-                // if (counterOfSameFrames >= 2)
-                // {
-                //  break;
-                // }
             }
 
             return counterOfSameFrames == 1;

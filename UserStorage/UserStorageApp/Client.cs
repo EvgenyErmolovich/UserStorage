@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Configuration;
 using UserStorageServices;
 
 namespace UserStorageApp
@@ -18,7 +19,7 @@ namespace UserStorageApp
             _userStorageService = userStorageService;
             if (_userStorageService == null)
             {
-                _userStorageService = new UserStorageLog(new UserStorageServiceMaster(null));
+                _userStorageService = new UserStorageLog(new UserStorageServiceMaster(new UserRepositoryWithState()));
             }
         }
 
@@ -27,16 +28,14 @@ namespace UserStorageApp
         /// </summary>
         public void Run()
         {
-            _userStorageService.Add(new User
-            {
-                FirstName = "Alex",
-                LastName = "Black",
-                Age = 25
-            });
+            var filePath = ConfigurationManager.AppSettings["FilePath"];
+            UserRepositoryWithState repository = new UserRepositoryWithState(filePath);
 
-            UserStorageServiceMaster m = new UserStorageServiceMaster(new List<UserStorageServiceSlave>(new[] { new UserStorageServiceSlave(), new UserStorageServiceSlave(), }));
+            repository.Start();
 
-            m.AddSubscriber(new UserStorageServiceSlave());
+            UserStorageServiceMaster m = new UserStorageServiceMaster(repository, new List<UserStorageServiceSlave>(new[] { new UserStorageServiceSlave(new UserRepositoryWithState()), new UserStorageServiceSlave(new UserRepositoryWithState()), }));
+
+            m.AddSubscriber(new UserStorageServiceSlave(repository));
 
             m.Add(new User()
             {
@@ -44,6 +43,9 @@ namespace UserStorageApp
                 LastName = "b",
                 Age = 55
             });
+
+            repository.Stop();
+
             ///_userStorageService.Remove(null);
 
             ///_userStorageService.Search(null);
