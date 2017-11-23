@@ -9,18 +9,14 @@ namespace UserStorageApp
     /// </summary>
     public class Client
     {
-        private readonly IUserStorageService _userStorageService;
+        private readonly IUserRepositoryManager repositoryManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Client"/> class.
         /// </summary>
-        public Client(IUserStorageService userStorageService = null)
+        public Client(IUserRepositoryManager repositoryManager = null)
         {
-            _userStorageService = userStorageService;
-            if (_userStorageService == null)
-            {
-                _userStorageService = new UserStorageLog(new UserStorageServiceMaster(new UserRepositoryWithState()));
-            }
+            this.repositoryManager = repositoryManager ?? new UserRepositoryWithState();
         }
 
         /// <summary>
@@ -29,14 +25,10 @@ namespace UserStorageApp
         public void Run()
         {
             var filePath = ConfigurationManager.AppSettings["FilePath"];
-            UserRepositoryWithState repository = new UserRepositoryWithState(filePath);
+            repositoryManager.Start();
 
-            repository.Start();
-
-            UserStorageServiceMaster m = new UserStorageServiceMaster(repository, new List<UserStorageServiceSlave>(new[] { new UserStorageServiceSlave(new UserRepositoryWithState()), new UserStorageServiceSlave(new UserRepositoryWithState()), }));
-
-            m.AddSubscriber(new UserStorageServiceSlave(repository));
-
+            UserStorageServiceMaster m = new UserStorageServiceMaster((IUserRepository)repositoryManager, new List<UserStorageServiceSlave>(new[] { new UserStorageServiceSlave(new UserRepositoryWithState()), new UserStorageServiceSlave(new UserRepositoryWithState()) }));
+            m.AddSubscriber(new UserStorageServiceSlave((IUserRepository)repositoryManager));
             m.Add(new User()
             {
                 FirstName = "a",
@@ -44,8 +36,7 @@ namespace UserStorageApp
                 Age = 55
             });
 
-            repository.Stop();
-
+            repositoryManager.Stop();
             ///_userStorageService.Remove(null);
 
             ///_userStorageService.Search(null);

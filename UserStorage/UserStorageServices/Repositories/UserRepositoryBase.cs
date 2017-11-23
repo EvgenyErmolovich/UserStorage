@@ -24,14 +24,6 @@ namespace UserStorageServices
 
         public int Count => users.Count;
 
-        public virtual void Start()
-        {
-        }
-
-        public virtual void Stop()
-        {
-        }
-
         public virtual User Get(Guid userId)
         {
             return users.Find(u => u.Id == userId);

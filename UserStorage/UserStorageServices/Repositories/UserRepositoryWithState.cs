@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace UserStorageServices
 {
-    public class UserRepositoryWithState : UserRepositoryBase
+    public class UserRepositoryWithState : UserRepositoryBase, IUserRepositoryManager
     {
         private readonly string filePath;
         private readonly IUserSerializationStrategy serializator;
@@ -22,12 +22,12 @@ namespace UserStorageServices
             this.serializator = serializator ?? new BinaryUserSerializationStrategy();
         }
 
-        public override void Start()
+        public void Start()
         {
             this.users = this.serializator.DeserializeUsers(this.filePath);
         }
 
-        public override void Stop()
+        public void Stop()
         {
             this.serializator.SerializeUsers(this.users, this.filePath);
         }
