@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Exceptions\AgeException.cs" />
+    <Compile Include="Repositories\Interfaces\IUserRepositoryManager.cs" />
     <Compile Include="Services\Interfaces\Validation\AgeValidator.cs" />
     <Compile Include="Repositories\Serialization\BinaryUserSerilizationStrategy.cs" />
     <Compile Include="Services\Interfaces\Validation\CompositeValidator.cs" />

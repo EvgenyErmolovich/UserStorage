@@ -10,10 +10,6 @@ namespace UserStorageServices
     {
         int Count { get; }
 
-        void Start();
-
-        void Stop();
-
         User Get(Guid userId);
 
         void Set(User user);
