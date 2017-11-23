@@ -8,10 +8,12 @@ namespace UserStorageServices
 {
     public interface IUserRepository
     {
+        int Count { get; }
         void Start();
         void Stop();
         User Get(Guid userId);
         void Set(User user);
+        void Delete(User user);
         IEnumerable<User> Query(Predicate<User> options);
     }
 }

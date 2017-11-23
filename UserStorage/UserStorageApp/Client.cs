@@ -34,9 +34,9 @@ namespace UserStorageApp
                 Age = 25
             });
 
-            UserStorageServiceMaster m = new UserStorageServiceMaster(new List<UserStorageServiceSlave>(new[] { new UserStorageServiceSlave(), new UserStorageServiceSlave(), }));
+            UserStorageServiceMaster m = new UserStorageServiceMaster(new UserMemoryCacheWithState(), new List<UserStorageServiceSlave>(new[] { new UserStorageServiceSlave(new UserMemoryCacheWithState()), new UserStorageServiceSlave(new UserMemoryCacheWithState()), }));
 
-            m.AddSubscriber(new UserStorageServiceSlave());
+            m.AddSubscriber(new UserStorageServiceSlave(new UserMemoryCacheWithState()));
 
             m.Add(new User()
             {

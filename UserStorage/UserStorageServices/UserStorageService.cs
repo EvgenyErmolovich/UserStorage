@@ -16,29 +16,38 @@ namespace UserStorageServices
     /// <summary>
     /// Represents a service that stores a set of <see cref="User"/>s and allows to search through them.
     /// </summary>
-    public abstract class UserStorageService : Switch, IUserStorageService
+    public abstract class UserStorageService : IUserStorageService
     {
-        private readonly IIdGenerator generator;
-        private readonly IEntityValidator<User> validator;
+        // private readonly IIdGenerator generator;
+        // private readonly IEntityValidator<User> validator;
 
         // private List<IUserStorageService> slaveServices = new List<IUserStorageService>();
-        private List<User> users;
-       
-        protected UserStorageService(IEntityValidator<User> _validator = null, IIdGenerator _generator = null) : base("enableLogging", "If logging enabled")
+        // private List<User> users;
+
+        // protected UserStorageService(IEntityValidator<User> _validator = null, IIdGenerator _generator = null) : base("enableLogging", "If logging enabled")
+        // {
+        //    this.validator = _validator;
+        //    this.generator = _generator;
+        //    if (_validator == null)
+        //    {
+        //        this.validator = new CompositeValidator();
+        //    }
+
+        //    if (this.generator == null)
+        //    {
+        //        this.generator = new DefaultIdGenerator();
+        //    }
+
+        //    this.users = new List<User>();
+        // }
+
+        protected UserStorageService(IUserRepository rep)
         {
-            this.validator = _validator;
-            this.generator = _generator;
-            if (_validator == null)
+            if (repository != null)
             {
-                this.validator = new CompositeValidator();
-            }
-
-            if (this.generator == null)
-            {
-                this.generator = new DefaultIdGenerator();
-            }
-
-            this.users = new List<User>();
+                repository = rep;
+            }   
+            else throw new ArgumentNullException($"{nameof(rep)} is null");
         }
 
         protected UserStorageService(IEnumerable<User> users, IEntityValidator<User> _validator = null, IIdGenerator _generator = null) : this(_validator, _generator)
@@ -54,7 +63,7 @@ namespace UserStorageServices
             this.Add(user);
         }
 
-        protected UserStorageService(IEntityValidator<User> _validator = null, IIdGenerator _generator = null, params User[] users) : this(_validator, _generator)
+        protected UserStorageService(IEntityValidator<User> _validator = null, IIdGenerator _generator = null, params User[] users) // : this(_validator, _generator)
         {
             foreach (User u in users)
             {
@@ -70,9 +79,11 @@ namespace UserStorageServices
         {
             get
             {
-                return this.users.Count;
+                return repository.Count;
             }
         }
+
+        private readonly IUserRepository repository;
 
         public abstract UserStorageServiceMode ServiceMode { get; }
 
@@ -83,13 +94,13 @@ namespace UserStorageServices
         public virtual void Add(User user)
         {
             // TODO: Implement Add() method and all other validation rules.
-            this.validator.Validate(user);
-            if (user.Id == Guid.Empty)
-            {
-                user.Id = this.generator.Generate();
-            }
+            // this.validator.Validate(user);
+            // if (user.Id == Guid.Empty)
+            // {
+            //    user.Id = this.generator.Generate();
+            // }
 
-            this.users.Add(user);
+            // this.users.Add(user);
 
             // if (mode == UserStorageServiceMode.MasterNode && slaveServices != null)
             // {
@@ -109,6 +120,7 @@ namespace UserStorageServices
             //        sub.UserAdded(user);
             //    }
             // }
+            repository.Set(user);
         }
 
         /// <summary>
@@ -117,23 +129,23 @@ namespace UserStorageServices
         public virtual void Remove(User user)
         {
             // TODO: Implement Remove() method.
-            if (user == null)
-            {
-                throw new ArgumentNullException("User entity {nameof(user)} is null");
-            }
+            // if (user == null)
+            // {
+            //    throw new ArgumentNullException("User entity {nameof(user)} is null");
+            // }
 
-            if (user.Id == Guid.Empty || string.IsNullOrWhiteSpace(user.FirstName) ||
-            string.IsNullOrWhiteSpace(user.LastName))
-            {
-                throw new ArgumentException("User {nameof(user)} is not defined");
-            }
+            // if (user.Id == Guid.Empty || string.IsNullOrWhiteSpace(user.FirstName) ||
+            // string.IsNullOrWhiteSpace(user.LastName))
+            // {
+            //    throw new ArgumentException("User {nameof(user)} is not defined");
+            // }
 
-            if (!this.Contains(user))
-            {
-                throw new ArgumentException("No user with such Id was found");
-            }
+            // if (!this.Contains(user))
+            // {
+            //    throw new ArgumentException("No user with such Id was found");
+            // }
 
-            this.users.Remove(user);
+            // this.users.Remove(user);
 
             // if (mode == UserStorageServiceMode.MasterNode)
             // {
@@ -142,6 +154,7 @@ namespace UserStorageServices
             //        sub.UserRemoved(user);
             //    }
             // }
+            repository.Delete(user);
         }
 
         /// <summary>
@@ -150,12 +163,13 @@ namespace UserStorageServices
         public virtual IEnumerable<User> Search(Predicate<User> predicate)
         {
             // TODO: Implement Search() method.
-            if (predicate == null)
-            {
-                throw new ArgumentNullException("Argument {nameof(predicate)} is null");
-            }
+            // if (predicate == null)
+            // {
+            //    throw new ArgumentNullException("Argument {nameof(predicate)} is null");
+            // }
 
-            return this.users.FindAll(predicate);
+            // return this.users.FindAll(predicate);
+            return repository.Query(predicate);
         }
 
         public User GetFirstUserByName(string firstName)
@@ -228,6 +242,6 @@ namespace UserStorageServices
             return this.Search(user => user.FirstName == firstname && user.LastName == lastname && user.Age == age);
         }
 
-        private bool Contains(User user) => this.users.Any(u => u.Id == user.Id);
+        //private bool Contains(User user) => this.users.Any(u => u.Id == user.Id);
     }
 }
