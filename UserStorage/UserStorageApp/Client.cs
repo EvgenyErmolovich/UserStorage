@@ -19,7 +19,7 @@ namespace UserStorageApp
             _userStorageService = userStorageService;
             if (_userStorageService == null)
             {
-                _userStorageService = new UserStorageLog(new UserStorageServiceMaster(new UserMemoryCacheWithState()));
+                _userStorageService = new UserStorageLog(new UserStorageServiceMaster(new UserRepositoryWithState()));
             }
         }
 
@@ -29,7 +29,7 @@ namespace UserStorageApp
         public void Run()
         {
             var filePath = ConfigurationManager.AppSettings["FilePath"];
-            UserMemoryCacheWithState repository = new UserMemoryCacheWithState(filePath);
+            UserRepositoryWithState repository = new UserRepositoryWithState(filePath);
 
             repository.Start();
 
@@ -40,7 +40,7 @@ namespace UserStorageApp
                 Age = 25
             });
 
-            UserStorageServiceMaster m = new UserStorageServiceMaster(repository, new List<UserStorageServiceSlave>(new[] { new UserStorageServiceSlave(new UserMemoryCacheWithState()), new UserStorageServiceSlave(new UserMemoryCacheWithState()), }));
+            UserStorageServiceMaster m = new UserStorageServiceMaster(repository, new List<UserStorageServiceSlave>(new[] { new UserStorageServiceSlave(new UserRepositoryWithState()), new UserStorageServiceSlave(new UserRepositoryWithState()), }));
 
             m.AddSubscriber(new UserStorageServiceSlave(repository));
 

@@ -1,22 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.IO;
+using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
-using System.Runtime.Serialization.Formatters.Binary;
 using UserStorageInterfaces;
 
 namespace UserStorageServices
 {
-    public abstract class UserMemoryCache : IUserRepository
+    public abstract class UserRepositoryBase : IUserRepository
     {
         protected List<User> users = new List<User>();
         private readonly IEntityValidator<User> validator;
         private readonly IIdGenerator generator;
         private string filePath = "repository.bin";
 
-        protected UserMemoryCache(IIdGenerator gen = null, IEntityValidator<User> val = null)
+        protected UserRepositoryBase(IIdGenerator gen = null, IEntityValidator<User> val = null)
         {
             generator = gen ?? new DefaultIdGenerator();
             validator = val ?? new CompositeValidator();

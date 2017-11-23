@@ -25,7 +25,7 @@ namespace UserStorageServices.Tests
         public void Add_UserFirstNameIsNull_ExceptionThrown()
         {
             // Arrange
-            var userStorageService = new UserStorageServiceMaster(new UserMemoryCacheWithState());
+            var userStorageService = new UserStorageServiceMaster(new UserRepositoryWithState());
             
             // Act
             userStorageService.Add(new User
@@ -46,7 +46,7 @@ namespace UserStorageServices.Tests
         public void Add_UserLastNameIsNull_ExceptionThrown()
         {
             // Arrange
-            var userStorageService = new UserStorageServiceMaster(new UserMemoryCacheWithState());
+            var userStorageService = new UserStorageServiceMaster(new UserRepositoryWithState());
 
             // Act
             userStorageService.Add(new User
@@ -63,7 +63,7 @@ namespace UserStorageServices.Tests
         public void Add_UserAgeLessThen10_ExceptionThrown()
         {
             // Arrange
-            var userStorageService = new UserStorageServiceMaster(new UserMemoryCacheWithState());
+            var userStorageService = new UserStorageServiceMaster(new UserRepositoryWithState());
 
             var s = new UserStorageLog(userStorageService);
 
@@ -83,7 +83,7 @@ namespace UserStorageServices.Tests
         public void Add_UserAgeGreaterThen100_ExceptionThrown()
         {
             // Arrange
-            var userStorageService = new UserStorageServiceMaster(new UserMemoryCacheWithState());
+            var userStorageService = new UserStorageServiceMaster(new UserRepositoryWithState());
 
             // Act
             userStorageService.Add(new User
@@ -100,7 +100,7 @@ namespace UserStorageServices.Tests
         [ExpectedException(typeof(ArgumentNullException))]
         public void Remove_UserIsNull_ExceptionThrown()
         {
-            UserStorageService userStorageService = new UserStorageServiceMaster(new UserMemoryCacheWithState());
+            UserStorageService userStorageService = new UserStorageServiceMaster(new UserRepositoryWithState());
 
             userStorageService.Remove(null);
         }
@@ -109,7 +109,7 @@ namespace UserStorageServices.Tests
         [ExpectedException(typeof(ArgumentException))]
         public void Remove_UserIdIsNotDefined_ExceptionThrown()
         {
-            UserStorageService userStorageService = new UserStorageServiceMaster(new UserMemoryCacheWithState());
+            UserStorageService userStorageService = new UserStorageServiceMaster(new UserRepositoryWithState());
 
             userStorageService.Remove(new User() { Id = Guid.Empty });
         }
@@ -118,9 +118,9 @@ namespace UserStorageServices.Tests
         [ExpectedException(typeof(ArgumentException))]
         public void Remove_UserIsNotInStorage_ExceptionThrown()
         {
-            UserStorageServiceSlave userStorageServiceSlave1 = new UserStorageServiceSlave(new UserMemoryCacheWithState());
-            UserStorageServiceSlave userStorageServiceSlave2 = new UserStorageServiceSlave(new UserMemoryCacheWithState());
-            UserStorageServiceMaster userStorageServiceMaster = new UserStorageServiceMaster(new UserMemoryCacheWithState(), new List<UserStorageServiceSlave>(new[] { userStorageServiceSlave1, userStorageServiceSlave2 }));
+            UserStorageServiceSlave userStorageServiceSlave1 = new UserStorageServiceSlave(new UserRepositoryWithState());
+            UserStorageServiceSlave userStorageServiceSlave2 = new UserStorageServiceSlave(new UserRepositoryWithState());
+            UserStorageServiceMaster userStorageServiceMaster = new UserStorageServiceMaster(new UserRepositoryWithState(), new List<UserStorageServiceSlave>(new[] { userStorageServiceSlave1, userStorageServiceSlave2 }));
 
             userStorageServiceMaster.Remove(new User() { Id = Guid.NewGuid(), FirstName = "alex", LastName = "black", Age = 24 });
         }
@@ -130,9 +130,9 @@ namespace UserStorageServices.Tests
         {
             User user = new User() { Id = Guid.NewGuid(), FirstName = "Alex", LastName = "Black", Age = 25 };
 
-            UserStorageServiceMaster userStorageService = new UserStorageServiceMaster(new UserMemoryCacheWithState());
-            UserStorageServiceSlave slave1 = new UserStorageServiceSlave(new UserMemoryCacheWithState());
-            UserStorageServiceSlave slave2 = new UserStorageServiceSlave(new UserMemoryCacheWithState());
+            UserStorageServiceMaster userStorageService = new UserStorageServiceMaster(new UserRepositoryWithState());
+            UserStorageServiceSlave slave1 = new UserStorageServiceSlave(new UserRepositoryWithState());
+            UserStorageServiceSlave slave2 = new UserStorageServiceSlave(new UserRepositoryWithState());
             userStorageService.AddSubscriber(slave1);
             userStorageService.AddSubscriber(slave2);
             userStorageService.Add(user);
