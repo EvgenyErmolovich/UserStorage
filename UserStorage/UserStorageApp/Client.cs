@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Configuration;
 using UserStorageServices;
 
 namespace UserStorageApp
@@ -27,7 +28,9 @@ namespace UserStorageApp
         /// </summary>
         public void Run()
         {
-            UserMemoryCacheWithState repository = new UserMemoryCacheWithState();
+            var filePath = ConfigurationManager.AppSettings["FilePath"];
+            UserMemoryCacheWithState repository = new UserMemoryCacheWithState(filePath);
+
             repository.Start();
 
             _userStorageService.Add(new User

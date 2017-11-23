@@ -1,5 +1,7 @@
-﻿using System;
+﻿#define TRACE
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -11,26 +13,38 @@ namespace UserStorageServices
 {
     public class UserMemoryCacheWithState : UserMemoryCache
     {
-        private string filePath = "repository.bin";
+        private string filePath;
+
+        public UserMemoryCacheWithState(string filePath = null)
+        {
+            this.filePath = filePath ?? "repository.bin";
+        }
+
         public override void Start()
         {
-            FileStream stream = new FileStream(filePath, FileMode.Open);
+            if (File.Exists(filePath))
+            {
+                FileStream stream = new FileStream(filePath, FileMode.Open);
 
-            try
-            {
-                BinaryFormatter formatter = new BinaryFormatter();
-                this.users = (List<User>)formatter.Deserialize(stream);
+                try
+                {
+                    BinaryFormatter formatter = new BinaryFormatter();
+                    this.users = (List<User>)formatter.Deserialize(stream);
+                }
+                catch (SerializationException e)
+                {
+                    Trace.WriteLine("Exception description" + e.Message);
+                    throw;
+                }
+                finally
+                {
+                    stream.Close();
+                }
             }
-            catch (SerializationException e)
+            else
             {
-                Console.WriteLine("Exception description" + e.Message);
-                throw;
+                Trace.WriteLine("Warning : File not found. It will be created");
             }
-            finally
-            {
-                stream.Close();
-            }
-
         }
 
         public override void Stop()
