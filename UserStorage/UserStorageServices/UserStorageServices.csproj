@@ -53,10 +53,13 @@
     <Compile Include="FirstNameIsNullOrEmptyException.cs" />
     <Compile Include="FirstNameValidator.cs" />
     <Compile Include="INotificationSubscriber.cs" />
+    <Compile Include="IUserRepository.cs" />
     <Compile Include="IUserStorageService.cs" />
     <Compile Include="LastNameIsNullOrEmptyException.cs" />
     <Compile Include="LastNameValidator.cs" />
     <Compile Include="User.cs" />
+    <Compile Include="UserMemoryCache.cs" />
+    <Compile Include="UserMemoryCacheWithState.cs" />
     <Compile Include="UserStorageDecorator.cs" />
     <Compile Include="UserStorageLog.cs" />
     <Compile Include="UserStorageService.cs" />
