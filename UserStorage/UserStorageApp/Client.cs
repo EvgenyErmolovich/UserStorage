@@ -33,13 +33,6 @@ namespace UserStorageApp
 
             repository.Start();
 
-            _userStorageService.Add(new User
-            {
-                FirstName = "Alex",
-                LastName = "Black",
-                Age = 25
-            });
-
             UserStorageServiceMaster m = new UserStorageServiceMaster(repository, new List<UserStorageServiceSlave>(new[] { new UserStorageServiceSlave(new UserRepositoryWithState()), new UserStorageServiceSlave(new UserRepositoryWithState()), }));
 
             m.AddSubscriber(new UserStorageServiceSlave(repository));
